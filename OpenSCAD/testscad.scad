@@ -6,7 +6,7 @@ strap = 11;
 max_cap_diameter = diameters[len(diameters) - 1];
 wall_radius = diameters[len(diameters) - 1] / 2 + 4;
 
-cone_slope = 1;
+cone_slope = 2;
 strap_margin = 10;
 
 // base
