@@ -29,12 +29,11 @@ difference() {
 
 // lens cap holders
 for(i = [0 : len(diameters) - 1]) {
-  target_cap_diameter = diameters[i];
   translate([0, 0, 2 + 2.5 * i]) {
     difference() {
       cylinder(2.5, wall_radius, wall_radius);
-      cylinder(cone_spike_height, target_cap_diameter / 2 + cone_slope, target_cap_diameter / 2);
-      translate([0, 0, cone_spike_height]) cylinder(2.5 - cone_spike_height, target_cap_diameter / 2, target_cap_diameter / 2 + cone_slope);
+      cylinder(cone_spike_height, diameters[i] / 2 + cone_slope, diameters[i] / 2);
+      translate([0, 0, cone_spike_height]) cylinder(2.5 - cone_spike_height, diameters[i] / 2, diameters[i] / 2 + cone_slope);
     }
   }
 }
