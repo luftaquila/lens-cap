@@ -11,7 +11,7 @@ max_cap_diameter = diameters[len(diameters) - 1];
 wall_radius = diameters[len(diameters) - 1] / 2 + 2 + cone_slope;
 
 
-// base
+// base part
 difference() {
   cylinder(4, wall_radius, wall_radius, true);
   difference() {
