@@ -4,6 +4,7 @@ diameters = [58, 82];
 strap = 11;
 
 cone_slope = 2;
+cone_spike_height = 1.6;
 strap_margin = 10;
 
 max_cap_diameter = diameters[len(diameters) - 1];
@@ -32,8 +33,8 @@ for(i = [1 : len(diameters)]) {
   translate([0, 0, 2 * i]) {
     difference() {
       cylinder(2.5, wall_radius, wall_radius);
-      cylinder(1.2, target_cap_diameter / 2 + cone_slope, target_cap_diameter / 2);
-      translate([0, 0, 1.2]) cylinder(1.3, target_cap_diameter / 2, target_cap_diameter / 2 + cone_slope);
+      cylinder(cone_spike_height, target_cap_diameter / 2 + cone_slope, target_cap_diameter / 2);
+      translate([0, 0, cone_spike_height]) cylinder(2.5 - cone_spike_height, target_cap_diameter / 2, target_cap_diameter / 2 + cone_slope);
     }
   }
 }
