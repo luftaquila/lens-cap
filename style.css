@@ -1,0 +1,122 @@
+#filedropzone {
+  border: 2px dashed #bbb;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 15px;
+  color: black;
+}
+
+#filedropzone_empty {
+  text-align: center;
+  color: #bbb;
+}
+
+#filedropzone_filled {
+  color: black;
+  display: none;
+}
+
+#filebuttons {
+  float: right;
+}
+
+canvas { cursor: move; }
+
+.parametersdiv {
+  border: 1px solid rgb(200,200,200);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.parametersdiv .header {
+  font-weight: bold;
+}
+
+.statusdiv {
+  width: 900px;
+  margin-bottom: 10px;
+}
+
+
+body {
+  font: 18px 'Helvetica Neue Light', HelveticaNeue-Light, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px 0px 10px 15px;
+}
+pre, code, textarea {
+  font: 12px/20px Monaco, monospace;
+  border: 1px solid #CCC;
+  border-radius: 3px;
+  background: #F9F9F9;
+  padding: 0 3px;
+  color: #555;
+}
+pre, textarea {
+  padding: 10px;
+}
+textarea { height: 200px; }
+textarea:focus { outline: none; }
+
+#codebox { width: 100% }
+#codebox td { width: 45%; }
+#codebox textarea { width: -webkit-fill-available; }
+
+#parameters {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+input.option-input {
+  width: 3rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  font-size: 1rem;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+input.option-input::-webkit-outer-spin-button,
+input.option-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+i.tooltip {
+  width: 1rem;
+  height: 1rem;
+  color: #2f75eb;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1.25 17c0 .69-.559 1.25-1.25 1.25-.689 0-1.25-.56-1.25-1.25s.561-1.25 1.25-1.25c.691 0 1.25.56 1.25 1.25zm1.393-9.998c-.608-.616-1.515-.955-2.551-.955-2.18 0-3.59 1.55-3.59 3.95h2.011c0-1.486.829-2.013 1.538-2.013.634 0 1.307.421 1.364 1.226.062.847-.39 1.277-.962 1.821-1.412 1.343-1.438 1.993-1.432 3.468h2.005c-.013-.664.03-1.203.935-2.178.677-.73 1.519-1.638 1.536-3.022.011-.924-.284-1.719-.854-2.297z'/%3E%3C/svg%3E");
+  background-size: cover;
+  display: inline-block;
+  filter: invert(35%) sepia(85%) saturate(2329%) hue-rotate(207deg) brightness(96%) contrast(91%);
+}
+
+ol li, ul li {
+  margin-bottom: .5rem;
+}
+
+h3 {
+  margin-top: 3rem;
+}
+
+a.link {
+  color: #2f75eb;
+}
+i.link {
+  width: 1rem;
+  height: 1rem;
+  color: #2f75eb;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNi4xODggOC43MTljLjQzOS0uNDM5LjkyNi0uODAxIDEuNDQ0LTEuMDg3IDIuODg3LTEuNTkxIDYuNTg5LS43NDUgOC40NDUgMi4wNjlsLTIuMjQ2IDIuMjQ1Yy0uNjQ0LTEuNDY5LTIuMjQzLTIuMzA1LTMuODM0LTEuOTQ5LS41OTkuMTM0LTEuMTY4LjQzMy0xLjYzMy44OThsLTQuMzA0IDQuMzA2Yy0xLjMwNyAxLjMwNy0xLjMwNyAzLjQzMyAwIDQuNzQgMS4zMDcgMS4zMDcgMy40MzMgMS4zMDcgNC43NCAwbDEuMzI3LTEuMzI3YzEuMjA3LjQ3OSAyLjUwMS42NyAzLjc3OS41NzVsLTIuOTI5IDIuOTI5Yy0yLjUxMSAyLjUxMS02LjU4MiAyLjUxMS05LjA5MyAwcy0yLjUxMS02LjU4MiAwLTkuMDkzbDQuMzA0LTQuMzA2em02LjgzNi02LjgzNmwtMi45MjkgMi45MjljMS4yNzctLjA5NiAyLjU3Mi4wOTYgMy43NzkuNTc0bDEuMzI2LTEuMzI2YzEuMzA3LTEuMzA3IDMuNDMzLTEuMzA3IDQuNzQgMCAxLjMwNyAxLjMwNyAxLjMwNyAzLjQzMyAwIDQuNzRsLTQuMzA1IDQuMzA1Yy0xLjMxMSAxLjMxMS0zLjQ0IDEuMy00Ljc0IDAtLjMwMy0uMzAzLS41NjQtLjY4LS43MjctMS4wNTFsLTIuMjQ2IDIuMjQ1Yy4yMzYuMzU4LjQ4MS42NjcuNzk2Ljk4Mi44MTIuODEyIDEuODQ2IDEuNDE3IDMuMDM2IDEuNzA0IDEuNTQyLjM3MSAzLjE5NC4xNjYgNC42MTMtLjYxNy41MTgtLjI4NiAxLjAwNS0uNjQ4IDEuNDQ0LTEuMDg3bDQuMzA0LTQuMzA1YzIuNTEyLTIuNTExIDIuNTEyLTYuNTgyLjAwMS05LjA5My0yLjUxMS0yLjUxLTYuNTgxLTIuNTEtOS4wOTIgMHoiLz48L3N2Zz4=");
+  background-size: cover;
+  display: inline-block;
+  filter: invert(35%) sepia(85%) saturate(2329%) hue-rotate(207deg) brightness(96%) contrast(91%);
+}
+
+#viewer div.viewer canvas {
+  width: 900px!important;
+}

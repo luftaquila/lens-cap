@@ -1,11 +1,11 @@
 $fn = 300; // resolution
 
-diameters = [58, 82];
-strap_width = 12;
+diameters = ##diameters##;
+strap_width = ##strap_width##;
 
-cone_slope = 2;
-cone_spike_height = 1.6;
-strap_margin = 10;
+strap_margin = ##strap_margin##;
+cone_slope = ##cone_slope##;
+cone_spike_height = ##cone_spike_height##;
 
 max_cap_diameter = diameters[len(diameters) - 1];
 wall_radius = diameters[len(diameters) - 1] / 2 + 2 + cone_slope;

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Lens cap holder Generator</title>
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.0/slimselect.min.css" rel="stylesheet">
+</head>
+<body>
+  <select style="position: absolute; right: 5rem;" onchange="if(this.value) location.href = this.value;">
+    <option disabled selected>Language</option>
+    <option value="/korean.html">Korean</option>
+    <option value="/">English</option>
+  </select>
+  <h1>Lens cap holder Generator</h1>
+  <p>여러분이 가지고 있는 렌즈의 사이즈에 맞춰 렌즈 캡 홀더의 3D 모델을 생성해주는 도구입니다.</p>
+  <p>생성한 모델을 3D 프린터로 뽑아서 바로 사용하세요!</p>
+  <p><b><i>Lens cap holder Generator</i></b>는 <a class="link" href="https://github.com/jscad/OpenJSCAD.org"><i class='link'></i>JSCAD</a>를 사용해서 <a class="link" href="https://openscad.org/"><i class='link'></i>OpenSCAD</a> <a class="link" href="https://github.com/luftaquila/lens-cap/blob/main/web/lens-cap-holder.scad"><i class='link'></i>스크립트</a>를 렌더링하고 STL로 변환합니다.</p>
+
+  <h3 style="margin: inherit;">예시</h3>
+  <div>
+
+  </div>
+
+  <h3>사용법</h3>
+  <ol>
+    <li>여러분이 가지고 있는 <b></i>모든</i></b> 렌즈의 구경(필터 크기)를 <b>옵션</b>에서 선택하세요.</li>
+    <li>필요하다면 다른 옵션도 설정하세요. 일반적인 경우 기본값으로 둬도 잘 작동합니다.</li>
+    <li><b><i>Generate!</i></b> 버튼을 누르세요.</li>
+    <li><i>Processing, please wait...</i> 문구가 미리보기 창 아래에 표시됩니다.<p style="margin: 0.5rem 0rem;">렌더링이 끝날 때까지 기다리세요. 렌더링이 끝나고 미리보기가 나올 때까지 기다리세요.</p></li>
+    <li><b><i>Generate STL</i></b>을 누르고 <b><i>Download STL</i></b> 을 눌러 STL 파일을 저장하세요</li>
+    <li>생성된 STL파일을 3D 프린터로 출력하세요!</li>
+     권장 출력 옵션은 다음과 같습니다: <ul style="margin-top: .5rem">
+       <li>레이어 높이: <= 0.2mm</li>
+       <li>서포트 생성: 베드에 닿는 곳만 <i id='tooltip_support' class='tooltip'></i></li>
+       <li>채우기 밀도: < 20%</li>
+     </ul>
+     참고: 생성된 모델을 출력하기 전에 꼭 실제 사이즈를 확인하세요. 사이즈가 다음과 같아야 합니다: <ul style="margin-top: .5rem">
+       <li>길이: <dfn>가장 큰 렌즈 캡 직경 + 스트랩 여유 길이 + 14 mm</dfn></li>
+       <li>폭: <dfn>가장 큰 렌즈 캡 직경 + (경사도 * 2) + 4 mm</dfn></li>
+       <li>높이: <dfn>(렌즈 캡 개수 * 2.5) + 4 mm</dfn></li>
+     </ul>
+  </ol>
+  <div id="options">
+    <h3>옵션</h3>
+    <table id="parameters" style="width: 100%; margin-bottom: 1rem">
+      <tr>
+        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">렌즈 캡 직경 <i id='tooltip_diameter' class='tooltip'></i></td>
+        <td><select id="diameters" multiple></select></td>
+      </tr>
+      <tr>
+        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">스트랩 너비 <i id='tooltip_strap_width' class='tooltip'></i></td>
+        <td><input id='strap_width' class="option-input" type="number" value="12"> mm</td>
+      </tr>
+      <tr>
+        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">스트랩 여유 길이 <i id='tooltip_strap_margin' class='tooltip'></i></td>
+        <td><input id='strap_margin' class="option-input" type="number" value="10"> mm</td>
+      </tr>
+      <tr>
+        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">경사도 <i id='tooltip_cone_slope' class='tooltip'></i></td>
+        <td><input id='cone_slope' class="option-input" type='number' value='2'> mm</td>
+      </tr>
+      <tr>
+        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">스파이크 높이 <i id='tooltip_cone_spike_height' class='tooltip'></i></td>
+        <td><input id='cone_spike_height' class="option-input" type="number" value="1.6"> mm</td>
+      </tr>
+    </table>
+    <div style="text-align: right"><button id="generate" style="font-size: 1.2rem;">Generate!</button></div>
+  </div>
+
+  <h3>미리보기</h3>
+  <div id="viewer"></div>
+
+  <h3>코드</h3>
+  <table id="codebox">
+    <tr>
+      <th>OpenSCAD Code</th>
+      <th>JSCAD Code</th>
+    </tr>
+    <tr>
+      <td><textarea disabled id="scad-code"></textarea></td>
+      <td><textarea disabled id="code" style="margin-left: 2%"></textarea></td>
+    </tr>
+  </table>
+
+  <script src="lib/three.min.js"></script>
+  <script src="lib/orbitcontrols.js"></script>
+  <!-- fallback if no WebGL -->
+  <script src="lib/projector.js"></script>
+  <script src="lib/canvasrenderer.js"></script>
+  <script src="lib/jquery-3.3.1.min.js"></script>
+  <script src="src/csg.js"></script>
+  <script src="src/threecsg.js"></script>
+  <script src="src/openjscad.js"></script>
+  <script src="src/formats.js"></script>
+  <script src="src/openscad-openjscad-translator/web-built.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.0/slimselect.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="script.js"></script>
+</body>
+</html>
