@@ -13,21 +13,23 @@
     <option value="/">English</option>
   </select>
   <h1>Lens cap holder Generator</h1>
-  <p><b><i>Lens cap holder Generator</i></b> builds a 3D model of lens cap holder which exactly fits to lenses you have.</p>
+  <p><b><i>Lens cap holder Generator</i></b> builds a 3D model of lens cap holder which exactly fits to all lenses you have.</p>
   <p>You can 3D print it for your camera!</p>
-  <p>It uses <a class="link" href="https://github.com/jscad/OpenJSCAD.org"><i class='link'></i>JSCAD</a> to render <a class="link" href="https://openscad.org/"><i class='link'></i>OpenSCAD</a> <a class="link" href="https://github.com/luftaquila/lens-cap/blob/main/web/lens-cap-holder.scad"><i class='link'></i>script</a> and display preview, export into STL file.</p>
+  <p>If you have any questions or ideas, feel free to contact: <a href="mailto:mail@luftaquila.io" class="link">mail@luftaquila.io</a>
 
-  <h3 style="margin: inherit;">Examples</h3>
-  <div>
-
-  </div>
+  <h3>Examples</h3>
+  <p>Click photo to enlarge.</p>
+  <img class="example-photo" src="images/ex1.jpg">
+  <img class="example-photo" src="images/ex2.jpg">
+  <img class="example-photo" src="images/ex3.jpg">
 
   <h3>Usage</h3>
+  <b>TL;DR</b>: Select your lenses' filter thread, Click <b><i>Generate!</i></b>, Wait, Click <b><i>Generate STL</i></b>, Click <b><i>Download STL</i></b>, Print!
   <ol>
-    <li>Select <b></i>all</i></b> of your lenses' cap diameter in <b>Options</b>. It is equal to filter thread.</li>
-    <li>Change other options if needed. In general, default options will work.</li>
+    <li>Select <b></i>all</i></b> of your lenses' cap diameter in <b>Options</b>. It is equal to lens' filter thread.</li>
+    <li>Open and configure advnaced options if needed. You can ignore advanced options in general.</li>
     <li>Click <b><i>Generate!</i></b></li>
-    <li><i>Processing, please wait...</i> will displayed at the bottom of the preview window.<p style="margin: 0.5rem 0rem;">Wait until rendering is finished. Rendered model will be displayed.</p></li>
+    <li><i>Processing, please wait...</i> will displayed at the bottom of the preview window.<p style="margin: 0.5rem 0rem;">Wait until rendering is finished. Rendered model will be displayed.</p>It can take few minutes depending on computer's performance.</li>
     <li>Click <b><i>Generate STL</i></b>, then click <b><i>Download STL</i></b>.</li>
     <li>Bring generated stl file to your 3d printer and print it!</li>
      Recommended print options are: <ul style="margin-top: .5rem">
@@ -42,8 +44,8 @@
      </ul>
   </ol>
 
+  <h3>Options</h3>
   <div id="options">
-    <h3>Options</h3>
     <table id="parameters" style="width: 100%; margin-bottom: 1rem">
       <tr>
         <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Lens cap diameters <i id='tooltip_diameter' class='tooltip'></i></td>
@@ -51,8 +53,10 @@
       </tr>
       <tr>
         <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Strap width <i id='tooltip_strap_width' class='tooltip'></i></td>
-        <td><input id='strap_width' class="option-input" type="number" value="12"> mm</td>
+        <td><input id='strap_width' class="option-input" type="number" value="11.5"> mm</td>
       </tr>
+    </table>
+    <table id='advanced' style="display: none;">
       <tr>
         <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Strap margin <i id='tooltip_strap_margin' class='tooltip'></i></td>
         <td><input id='strap_margin' class="option-input" type="number" value="10"> mm</td>
@@ -66,8 +70,9 @@
         <td><input id='cone_spike_height' class="option-input" type="number" value="1.6"> mm</td>
       </tr>
     </table>
-    <div style="text-align: right"><button id="generate" style="font-size: 1.2rem;">Generate!</button></div>
+    <p id="toggle-advanced">Advanced Options...</p>
   </div>
+  <div style="text-align: right; margin-top: 1rem;"><button id="generate" style="font-size: 1.2rem;">Generate!</button></div>
 
   <h3>Preview</h3>
   <div id="viewer"></div>
@@ -83,6 +88,8 @@
       <td><textarea disabled id="code" style="margin-left: 2%"></textarea></td>
     </tr>
   </table>
+
+  <p><b><i>Lens cap holder Generator</i></b> uses <a class="link" href="https://github.com/jscad/OpenJSCAD.org"><i class='link'></i>JSCAD</a> to render <a class="link" href="https://openscad.org/"><i class='link'></i>OpenSCAD</a> <a class="link" href="https://github.com/luftaquila/lens-cap/blob/main/web/lens-cap-holder.scad"><i class='link'></i>script</a> and display preview, export into STL file.</p>
 
   <script src="lib/three.min.js"></script>
   <script src="lib/orbitcontrols.js"></script>

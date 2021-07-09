@@ -65,7 +65,7 @@ textarea:focus { outline: none; }
 #codebox td { width: 45%; }
 #codebox textarea { width: -webkit-fill-available; }
 
-#parameters {
+#options {
   border: 1px solid lightgray;
   border-radius: 5px;
 }
@@ -120,3 +120,14 @@ i.link {
 #viewer div.viewer canvas {
   width: 900px!important;
 }
+
+#toggle-advanced {
+  margin-left: 1rem;
+  color: #2f75eb;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.example-photo { width: 30%; }
+.wide-modal { width: 90%!important; }
+.medium-modal { width: 70%!important; }
