@@ -87,7 +87,7 @@ $('#tooltip_support').click(() => Swal.fire({ icon: 'info', title: translator('t
 function translator(value) {
   const isKorean = $('html').attr('lang') === 'ko';
   switch (value) {
-    case 'diameter_select_placeholder': return isKorean ? '렌즈 캡 직경을 선택하세요.' : 'Your lens cap diameters here';
+    case 'diameter_select_placeholder': return isKorean ? '렌즈 캡 직경을 모두 선택하세요.' : 'Your all lens cap diameters here';
     case 'invalid_diameter_title': return isKorean ? '올바른 렌즈 캡 크기가 아닙니다.' : 'Invalid lens cap diameter.';
     case 'invalid_diameter_text': return isKorean ?  '"mm"를 제외한 숫자만 입력하세요.' : 'Do not include "mm" here. This accepts numbers only.';
     case 'invalid_option_title': return isKorean ? '비어있는 옵션이 있습니다.' : 'Empty option field present.';
