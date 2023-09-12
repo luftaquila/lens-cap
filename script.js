@@ -14,10 +14,16 @@ const select = new SlimSelect({
     return { text: value + 'mm', value: Number(value) }
   },
   data: [
+    { text: '22mm', value: 22 },
+    { text: '25.5mm', value: 25.5 },
+    { text: '27mm', value: 27 },
+    { text: '30.5mm', value: 30.5 },
+    { text: '34mm', value: 34 },
+    { text: '35.5mm', value: 35.5 },
     { text: '37mm', value: 37 },
     { text: '39mm', value: 39 },
-    { text: '40mm', value: 40 },
     { text: '40.5mm', value: 40.5 },
+    { text: '42mm', value: 42 },
     { text: '43mm', value: 43 },
     { text: '46mm', value: 46 },
     { text: '49mm', value: 49 },
@@ -32,6 +38,8 @@ const select = new SlimSelect({
     { text: '82mm', value: 82 },
     { text: '86mm', value: 86 },
     { text: '95mm', value: 95 },
+    { text: '105mm', value: 105 },
+    { text: '112mm', value: 112 },
   ]
 });
 
@@ -104,11 +112,11 @@ function translator(value) {
     case 'tooltip_strap_margin_title': return isKorean ? '스트랩 여유 길이' : 'Strap margin';
     case 'tooltip_strap_margin_text': return isKorean ? '<img src="images/strapMargin.png" style="width: 100%"><br><br>스트랩 여유 길이는 사진에 표시된 부분의 길이를 말합니다.<br>너무 짧으면 스트랩이 너무 꺾여 보기에 좋지 않을 수 있습니다.' : '<img src="images/strapMargin.png" style="width: 100%"><br><br>Strap margin means the length indicated in the picture.<br>It looks bad if the value is too short.';
     case 'tooltip_cone_slope_title': return isKorean ? '경사도' : 'Cone slope';
-    case 'tooltip_cone_slope_text': return isKorean ? '<img src="images/spike.png" style="width: 100%"><br><br>경사도는 사진에 표시된 부분의 길이를 말합니다.<br>값이 커지면 그만큼 경사가 완만해지고 끝이 뾰족해집니다.<br><br>정확한 경사각을 알고 싶다면 탄젠트를 이용하세요.' : '<img src="images/spike.png" style="width: 100%"><br><br>Cone slope means the indicated length in the picture. Slope gets gentler and spike gets sharper as the value goes bigger.<br><br>You can use tangent-thing if you want to know the exact slope angle.';
+    case 'tooltip_cone_slope_text': return isKorean ? '<img src="images/spike.png" style="width: 100%"><br><br>경사도는 사진에 표시된 부분의 길이를 말합니다.<br>값이 커지면 그만큼 경사가 완만해지고 끝이 뾰족해집니다.' : '<img src="images/spike.png" style="width: 100%"><br><br>Cone slope means the indicated length in the picture. Slope gets gentler and spike gets sharper as the value goes bigger.<br><br>You can use tangent-thing if you want to know the exact slope angle.';
     case 'tooltip_cone_spike_height_title': return isKorean ? '스파이크 높이' : 'Cone spike height';
     case 'tooltip_cone_spike_height_text': return isKorean ? '<img src="images/spike.png" style="width: 100%"><br><br>스파이크 높이는 사진에 표시된 것처럼,<br>렌즈 캡과 맞물리는 뾰족한 부분의 높이를 말합니다.<br><br>전체 높이가 2.5mm이므로, 이 값을 초과할 수 없습니다.' : '<img src="images/spike.png" style="width: 100%"><br><br>Cone spike height means the height of the spike coupled with the lens cap, as the picture indicates.<br><br>Value cannot be larger than 2.5mm, as the total height is 2.5mm.';
     case 'tooltip_support_title': return isKorean ? '서포트 생성' : 'Support generation';
-    case 'tooltip_support_text': return isKorean ? '<img src="images/support.gif" style="width: 100%"><br><br>베드에 닿는 곳만 서포트를 생성하지 않고 모든 곳에 서포트를 생성하도록 하면 사진처럼 렌즈 캡을 잡아주는 부분의 아래쪽에 서포트(분홍색)가 생길 수 있습니다.<br><br>이렇게 되면 떼기 힘들 수 있으니 서포트가 없어도 잘 출력해줄거라고 3D프린터를 믿어봅시다.<br><br>베드에 닿는 곳만 서포트를 생성하는 옵션이 없다면 고급 설정에서 경사도 값을 줄여 보세요. 낮은 경사도 값은 실제 경사를 더 가파르게 만들어 서포트가 생성되지 않도록 해줍니다. 경사도 1mm도 렌즈 캡을 단단하게 붙잡는데 문제가 없습니다.' : '<img src="images/support.gif" style="width: 100%"><br><br>Supports(pink layers at picture) could be generated at the bottom part of the cone holding the lens cap if support generation option is "Everywhere", not "Touching buildplate only".<br><br>These supports are usually hard to remove.<br>So just believe, your 3D printer can print it without support.<br><br>If there is no such option like "Touching buildplate only" and your slicer generates supports, reducing cone slope will works too. Lesser cone slope length will make cone steeper, and supports will not generated. 1mm cone slope can also hold lens cap tightly.';
+    case 'tooltip_support_text': return isKorean ? '<img src="images/support.gif" style="width: 100%"><br><br>베드에 닿는 곳만 서포트를 생성하지 않고 모든 곳에 서포트를 생성하도록 하면 사진처럼 렌즈 캡을 잡아주는 부분의 아래쪽에 서포트(분홍색)가 생길 수 있습니다.<br><br>이렇게 되면 서포트 제거가 불가능하니 서포트 없이도 잘 출력해줄 거라고 3D프린터를 믿어봅시다.<br><br>베드에 닿는 곳만 서포트를 생성하는 옵션이 없다면 고급 설정에서 경사도 값을 줄여 보세요. 낮은 경사도 값은 실제 경사를 더 가파르게 만들어 서포트가 생성되지 않도록 해줍니다. 경사도 1mm도 렌즈 캡을 단단하게 붙잡는데 문제가 없습니다.' : '<img src="images/support.gif" style="width: 100%"><br><br>Supports(pink layers at picture) could be generated at the bottom part of the cone holding the lens cap if support generation option is "Everywhere", not "Touching buildplate only".<br><br>These supports are usually hard to remove.<br>So just believe, your 3D printer can print it without support.<br><br>If there is no such option like "Touching buildplate only" and your slicer generates supports, reducing cone slope will works too. Lesser cone slope length will make cone steeper, and supports will not generated. 1mm cone slope can also hold lens cap tightly.';
 
     case 'advanced_close': return isKorean ? '고급 옵션 열기' : 'Advanced options...';
     case 'advanced_open': return isKorean ? '고급 옵션 닫기' : 'Close advanced options';
