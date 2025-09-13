@@ -11,6 +11,9 @@ cone_spike_height = 1.6;
 max_cap_diameter = diameters[len(diameters) - 1];
 wall_radius = diameters[len(diameters) - 1] / 2 + 2 + cone_slope;
 
+base_holder_h = 2.5;
+top_grip_min_h = 4.2;
+
 fillet = 1.5;
 
 // -------- fillet helpers --------
@@ -99,15 +102,18 @@ difference() {
 
 // lens cap holders
 for (i = [0 : len(diameters) - 1]) {
-  translate([0, 0, 2 + 2.5 * i]) {
+  h_i = (i == len(diameters) - 1) ? max(base_holder_h, top_grip_min_h) : base_holder_h;
+
+  translate([0, 0, 2 + base_holder_h * i]) {
     difference() {
       if (i == len(diameters) - 1)
-        rounded_cylinder_select(2.5, wall_radius, wall_radius, fillet, which="top", center=false);
+        rounded_cylinder_select(h_i, wall_radius, wall_radius, fillet, which="top", center=false);
       else
-        cylinder(2.5, wall_radius, wall_radius);
+        cylinder(h_i, wall_radius, wall_radius);
 
       cylinder(cone_spike_height, diameters[i] / 2 + cone_slope, diameters[i] / 2);
-      translate([0, 0, cone_spike_height]) cylinder(2.5 - cone_spike_height, diameters[i] / 2, diameters[i] / 2 + cone_slope);
+      translate([0, 0, cone_spike_height])
+        cylinder(h_i - cone_spike_height, diameters[i] / 2, diameters[i] / 2 + cone_slope);
     }
   }
 }
