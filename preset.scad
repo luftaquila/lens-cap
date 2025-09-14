@@ -97,7 +97,7 @@ difference() {
 // strap holder
 difference() {
   rounded_cube([max_cap_diameter + 14 + strap_margin, strap_width + 6, 4], fillet, true);
-  rounded_cube([max_cap_diameter + 8 + strap_margin, strap_width, 4], fillet, true);
+  cube([max_cap_diameter + 8 + strap_margin, strap_width, 4], true);
 }
 
 // lens cap holders
