@@ -1,3 +1,0 @@
-[submodule "lib/openscad-wasm"]
-	path = lib/openscad-wasm
-	url = https://github.com/openscad/openscad-wasm.git

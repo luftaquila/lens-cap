@@ -1,141 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <title>Lens cap holder Generator</title>
-  <meta property="og:title" content="Lens cap holder Generator"/>
-  <meta property="og:description" content="3D print your own lens cap holder."/>
-  <link rel="stylesheet" href="style.css" type="text/css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.0/slimselect.min.css" rel="stylesheet">
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-221C8HG6K8"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-221C8HG6K8');
-  </script>
+  <title>Lens cap generator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lens cap generator">
+  <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet" />
 </head>
+
 <body>
-  <select style="float: right;" onchange="if(this.value) location.href = this.value;">
-    <option disabled selected>Language</option>
-    <option value="/korean.html">Korean</option>
-    <option value="/">English</option>
-  </select>
-  <h1>Lens cap holder Generator</h1>
-  <p><b><i>Lens cap holder Generator</i></b> builds a 3D model of lens cap holder which exactly fits to all lenses you have.</p>
-  <p>You can 3D print it for your camera!</p>
-  <p>If you have any questions or ideas, feel free to contact: <a href="mailto:mail@luftaquila.io" class="link">mail@luftaquila.io</a>&ensp;<a class="link" href="https://github.com/luftaquila/lens-cap"><i class="link"></i>Source Code(Github)</a></p>
+  <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
+  <script src="https://unpkg.com/three@latest/build/three.module.min.js"></script>
+  <script type="module">
+    import OpenSCAD from "./openscad.wasm.js";
 
-  <h3>Examples</h3>
-  <p>Click photo to enlarge.</p>
-  <img class="example-photo" src="images/ex1.jpg">
-  <img class="example-photo" src="images/ex2.jpg">
-  <img class="example-photo" src="images/ex3.jpg">
+    (async () => {
+      try {
+        const instance = await OpenSCAD({
+          noInitialRun: true,
+          locateFile: (path) => new URL(path, import.meta.url).href,
+        });
 
-  <h3>Usage</h3>
-  <b>TL;DR</b>: Select your lenses' filter thread, Click <b><i>Generate!</i></b>, Wait, Click <b><i>Generate STL</i></b>, Click <b><i>Download STL</i></b>, Print!
-  <ol>
-    <li>Select <b></i>all</i></b> of your lenses' cap diameter in <b>Options</b>. It is equal to lens' filter thread.</li>
-    <li>Open and configure advnaced options if needed. You can ignore advanced options in general.</li>
-    <li>Click <b><i>Generate!</i></b></li>
-    <li><i>Processing, please wait...</i> will displayed at the bottom of the preview window.<p style="margin: 0.5rem 0rem;">Wait until rendering is finished. Rendered model will be displayed.</p>It can take few minutes depending on computer's performance.</li>
-    <li>Click <b><i>Generate STL</i></b>, then click <b><i>Download STL</i></b>.</li>
-    <li>Bring generated stl file to your 3d printer and print it!</li>
-     Recommended print options are: <ul style="margin-top: .5rem">
-       <li>Layer height: <= 0.2mm</li>
-       <li>Support generation: Touching buildplate only <i id='tooltip_support' class='tooltip'></i></li>
-       <li>Infill density: < 20%</li>
-     </ul>
-     Notice: Check your model's actual size before print it. It must be <ul style="margin-top: .5rem">
-       <li>length: <dfn>largest cap diameter + strap margin + 14 mm</dfn></li>
-       <li>width: <dfn>largest cap diameter + (cone slope * 2) + 4 mm</dfn></li>
-       <li>height: <dfn>(number of caps * 2.5) + 4 mm</dfn></li>
-     </ul>
-  </ol>
-
-  <h3>Advertisement</h3>
-  <p>Please click ad once if you like this service!</p>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-7125803081319468"
-       data-ad-slot="9325174454"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
-  <h3>Options</h3>
-  <div id="options">
-    <table id="parameters" style="width: 100%; margin-bottom: 1rem">
-      <tr>
-        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Lens cap diameters <i id='tooltip_diameter' class='tooltip'></i></td>
-        <td><select id="diameters" multiple></select></td>
-      </tr>
-      <tr>
-        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Strap width <i id='tooltip_strap_width' class='tooltip'></i></td>
-        <td><input id='strap_width' class="option-input" type="number" value="11.5"> mm</td>
-      </tr>
-    </table>
-    <table id='advanced' style="display: none;">
-      <tr>
-        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Strap margin <i id='tooltip_strap_margin' class='tooltip'></i></td>
-        <td><input id='strap_margin' class="option-input" type="number" value="10"> mm</td>
-      </tr>
-      <tr>
-        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Cone slope <i id='tooltip_cone_slope' class='tooltip'></i></td>
-        <td><input id='cone_slope' class="option-input" type='number' value='2'> mm</td>
-      </tr>
-      <tr>
-        <td style="width: 15rem; font-weight: bold; padding-left: 1rem;">Cone spike height <i id='tooltip_cone_spike_height' class='tooltip'></i></td>
-        <td><input id='cone_spike_height' class="option-input" type="number" value="1.6"> mm</td>
-      </tr>
-    </table>
-    <p id="toggle-advanced">Advanced Options...</p>
-  </div>
-  <div style="text-align: right; margin-top: 1rem;"><button id="generate" style="font-size: 1.2rem;">Generate!</button></div>
-
-  <h3>Preview</h3>
-  <div id="viewer"></div>
-
-  <h3>Codes</h3>
-  <table id="codebox">
-    <tr>
-      <th>OpenSCAD Code</th>
-      <th>JSCAD Code</th>
-    </tr>
-    <tr>
-      <td><textarea disabled id="scad-code"></textarea></td>
-      <td><textarea disabled id="code" style="margin-left: 2%"></textarea></td>
-    </tr>
-  </table>
-
-  <p><b><i>Lens cap holder Generator</i></b> uses <a class="link" href="https://github.com/jscad/OpenJSCAD.org"><i class='link'></i>JSCAD</a> to render <a class="link" href="https://openscad.org/"><i class='link'></i>OpenSCAD</a> script and export into STL file.</p>
-
-  <h3>Comments</h3>
-  <script src="https://utteranc.es/client.js"
-        repo="luftaquila/luftaquila.github.io"
-        issue-term="title"
-        label="comments"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
+        instance.FS.writeFile("/input.scad", "cube(10);");
+        instance.callMain(["/input.scad", "-o", "cube.stl"]);
+        const output = instance.FS.readFile("/cube.stl");
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([output], {type: "application/octet-stream"}));
+        a.download = "cube.stl";
+        document.body.append(a);
+        a.click();
+      } catch (e) {
+        console.error("OpenSCAD init failed:", e);
+      }
+    })();
   </script>
 
-  <script src="lib/three.min.js"></script>
-  <script src="lib/orbitcontrols.js"></script>
-  <!-- fallback if no WebGL -->
-  <script src="lib/projector.js"></script>
-  <script src="lib/canvasrenderer.js"></script>
-  <script src="lib/jquery-3.3.1.min.js"></script>
-  <script src="src/csg.js"></script>
-  <script src="src/threecsg.js"></script>
-  <script src="src/openjscad.js"></script>
-  <script src="src/formats.js"></script>
-  <script src="src/openscad-openjscad-translator/web-built.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.0/slimselect.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="script.js"></script>
+
 </body>
+
 </html>
