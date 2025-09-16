@@ -46,7 +46,7 @@
     import * as THREE from "https://esm.sh/three@0.160.0";
     import {OrbitControls} from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
     import {STLLoader} from "https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js";
-    import OpenSCAD from "./openscad.wasm.js";
+    const scadWorker = new Worker(new URL("./openscad-worker.js", import.meta.url), {type: "module"});
 
     const $ = (sel) => document.querySelector(sel);
     const showLoading = (on = true) => {
@@ -173,18 +173,34 @@
       }
     }
 
-    async function renderOnceToSTL({sourceText, fnValue, outPath}) {
-      const mod = await OpenSCAD({
-        noInitialRun: true,
-        locateFile: (path) => new URL(path, import.meta.url).href,
-        print: (txt) => log(txt),
-        printErr: (txt) => log(txt),
+    let workerMsgIdSeq = 1;
+    const pendingWorkerPromises = new Map();
+
+    scadWorker.onmessage = (event) => {
+      const data = event.data || {};
+      if (data.type === "log") {
+        log(data.text || "");
+        return;
+      }
+
+      const {id} = data;
+      if (!id) return;
+      const entry = pendingWorkerPromises.get(id);
+      if (!entry) return;
+      pendingWorkerPromises.delete(id);
+      if (data.type === "result") {
+        entry.resolve(new Uint8Array(data.buffer));
+      } else if (data.type === "error") {
+        entry.reject(new Error(data.message || "Worker error"));
+      }
+    };
+
+    function renderOnceToSTL({sourceText, fnValue, outPath}) {
+      const id = workerMsgIdSeq++;
+      return new Promise((resolve, reject) => {
+        pendingWorkerPromises.set(id, {resolve, reject});
+        scadWorker.postMessage({id, action: "render", sourceText, fnValue, outPath});
       });
-
-      mod.FS.writeFile("/__model.scad", `$fn=${fnValue};\n${sourceText}`);
-      mod.callMain(["/__model.scad", "-o", outPath]);
-
-      return mod.FS.readFile(outPath);
     }
 
     async function renderForView() {
