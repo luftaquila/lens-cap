@@ -1,7 +1,11 @@
 import * as THREE from "https://esm.sh/three@0.160.0";
 import {OrbitControls} from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
 import {STLLoader} from "https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js";
-const scadWorker = new Worker(new URL("./openscad-worker.js", import.meta.url), {type: "module"});
+const scadWorker = new Worker(new URL("./openscad-worker.js", import.meta.url), {
+  type: "module",
+  // Enable shared memory for better multi-threading performance
+  shared: true
+});
 
 const $ = (sel) => document.querySelector(sel);
 const showLoading = (on = true) => {
@@ -154,7 +158,14 @@ function renderOnceToSTL({sourceText, fnValue, outPath}) {
   const id = workerMsgIdSeq++;
   return new Promise((resolve, reject) => {
     pendingWorkerPromises.set(id, {resolve, reject});
-    scadWorker.postMessage({id, action: "render", sourceText, fnValue, outPath});
+    // Send render request
+    scadWorker.postMessage({
+      id, 
+      action: "render", 
+      sourceText, 
+      fnValue, 
+      outPath
+    });
   });
 }
 
