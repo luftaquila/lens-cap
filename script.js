@@ -193,7 +193,7 @@ async function renderForDownload() {
 
   try {
     const blob = new Blob(
-      [await renderOnceToSTL({sourceText: $("#scadEditor").value, fnValue: 100, outPath: "/__download.stl"})],
+      [await renderOnceToSTL({sourceText: $("#scadEditor").value, fnValue: 200, outPath: "/__download.stl"})],
       {type: "application/octet-stream"}
     );
 
@@ -227,7 +227,7 @@ $("#downloadStlBtn").addEventListener("click", () => withRenderLock(renderForDow
 
 async function loadInitialScad() {
   try {
-    const res = await fetch("/scad/preset.scad");
+    const res = await fetch("preset.scad");
 
     if (!res.ok) {
       throw new Error(`Failed to fetch scad: ${res.status} ${res.statusText}`);
