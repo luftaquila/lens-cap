@@ -1,6 +1,6 @@
 import * as THREE from "https://esm.sh/three@0.160.0";
-import {OrbitControls} from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-import {STLLoader} from "https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js";
+import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+import { STLLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js";
 const scadWorker = new Worker(new URL("./openscad-worker.js", import.meta.url), {
   type: "module",
   // Enable shared memory for better multi-threading performance
@@ -11,6 +11,17 @@ const $ = (sel) => document.querySelector(sel);
 const showLoading = (on = true) => {
   $("#loading").style.display = on ? "flex" : "none";
 };
+
+// Extract lens array from SCAD code
+function getLensArrayFromScad(scadCode) {
+  const lensMatch = scadCode.match(/lens\s*=\s*\[(.*?)\]/);
+  if (!lensMatch) return [];
+
+  const lensString = lensMatch[1];
+  // Extract numbers from the lens array
+  const numbers = lensString.match(/\d+/g);
+  return numbers ? numbers.map(Number) : [];
+}
 const log = (...args) => {
   const logEl = $("#log");
   logEl.textContent += (logEl.textContent ? "\n" : "") + args.join(" ");
@@ -26,7 +37,7 @@ const slim = new SlimSelect({
         return false;
       }
 
-      return {text: value + 'mm', value: Number(value)}
+      return { text: value + 'mm', value: Number(value) }
     },
     afterChange: (values) => {
       $("#scadEditor").value = $("#scadEditor").value.replace(
@@ -36,27 +47,27 @@ const slim = new SlimSelect({
     }
   },
   data: [
-    {text: '42mm', value: 42},
-    {text: '43mm', value: 43},
-    {text: '46mm', value: 46},
-    {text: '49mm', value: 49},
-    {text: '52mm', value: 52},
-    {text: '55mm', value: 55},
-    {text: '58mm', value: 58},
-    {text: '60mm', value: 60},
-    {text: '62mm', value: 62},
-    {text: '67mm', value: 67},
-    {text: '72mm', value: 72},
-    {text: '77mm', value: 77},
-    {text: '82mm', value: 82},
-    {text: '86mm', value: 86},
-    {text: '95mm', value: 95},
-    {text: '105mm', value: 105},
+    { text: '42mm', value: 42 },
+    { text: '43mm', value: 43 },
+    { text: '46mm', value: 46 },
+    { text: '49mm', value: 49 },
+    { text: '52mm', value: 52 },
+    { text: '55mm', value: 55 },
+    { text: '58mm', value: 58 },
+    { text: '60mm', value: 60 },
+    { text: '62mm', value: 62 },
+    { text: '67mm', value: 67 },
+    { text: '72mm', value: 72 },
+    { text: '77mm', value: 77 },
+    { text: '82mm', value: 82 },
+    { text: '86mm', value: 86 },
+    { text: '95mm', value: 95 },
+    { text: '105mm', value: 105 },
   ]
 });
 
 const canvas = $("#canvas");
-const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
 const scene = new THREE.Scene();
@@ -106,7 +117,7 @@ function loadSTLIntoThree(stlBytes) {
   const center = new THREE.Vector3().addVectors(bb.min, bb.max).multiplyScalar(0.5);
   geom.translate(-center.x, -center.y, -center.z);
 
-  const mat = new THREE.MeshStandardMaterial({metalness: .15, roughness: .6});
+  const mat = new THREE.MeshStandardMaterial({ metalness: .15, roughness: .6 });
   currentMesh = new THREE.Mesh(geom, mat);
   scene.add(currentMesh);
 
@@ -142,7 +153,7 @@ scadWorker.onmessage = (event) => {
     return;
   }
 
-  const {id} = data;
+  const { id } = data;
   if (!id) return;
   const entry = pendingWorkerPromises.get(id);
   if (!entry) return;
@@ -154,16 +165,16 @@ scadWorker.onmessage = (event) => {
   }
 };
 
-function renderOnceToSTL({sourceText, fnValue, outPath}) {
+function renderOnceToSTL({ sourceText, fnValue, outPath }) {
   const id = workerMsgIdSeq++;
   return new Promise((resolve, reject) => {
-    pendingWorkerPromises.set(id, {resolve, reject});
+    pendingWorkerPromises.set(id, { resolve, reject });
     // Send render request
     scadWorker.postMessage({
-      id, 
-      action: "render", 
-      sourceText, 
-      fnValue, 
+      id,
+      action: "render",
+      sourceText,
+      fnValue,
       outPath
     });
   });
@@ -175,7 +186,7 @@ async function renderForView() {
   $("#downloadStlBtn").disabled = true;
 
   try {
-    loadSTLIntoThree(await renderOnceToSTL({sourceText: $("#scadEditor").value, fnValue: 20, outPath: "/__view.stl"}));
+    loadSTLIntoThree(await renderOnceToSTL({ sourceText: $("#scadEditor").value, fnValue: 20, outPath: "/__view.stl" }));
     $("#downloadStlBtn").disabled = false;
   } catch (e) {
     log(e?.message || e);
@@ -193,8 +204,8 @@ async function renderForDownload() {
 
   try {
     const blob = new Blob(
-      [await renderOnceToSTL({sourceText: $("#scadEditor").value, fnValue: 200, outPath: "/__download.stl"})],
-      {type: "application/octet-stream"}
+      [await renderOnceToSTL({ sourceText: $("#scadEditor").value, fnValue: 200, outPath: "/__download.stl" })],
+      { type: "application/octet-stream" }
     );
 
     if (lastHQUrl) {
@@ -203,7 +214,10 @@ async function renderForDownload() {
 
     lastHQUrl = URL.createObjectURL(blob);
 
-    triggerDownload(lastHQUrl, "TODO.stl");
+    // Generate filename based on lens array
+    const lensArray = getLensArrayFromScad($("#scadEditor").value);
+    const filename = lensArray.length > 0 ? `${lensArray.join('-')}mm.stl` : "lens-cap-holder.stl";
+    triggerDownload(lastHQUrl, filename);
   } catch (e) {
     log(e?.message || e);
   } finally {
