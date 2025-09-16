@@ -1,41 +1,253 @@
-<html>
+<!doctype html>
+<html lang="ko">
 
 <head>
-  <title>Lens cap generator</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Lens cap generator">
+  <meta charset="utf-8" />
+  <title>Lens Cap Holder Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
   <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet" />
+  <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
 </head>
 
 <body>
-  <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
-  <script src="https://unpkg.com/three@latest/build/three.module.min.js"></script>
+  <header>
+    <h1>Lens Cap Holder Generator</h1>
+  </header>
+
+  <main>
+    <section class="panel" id="controls">
+      <select id="configSelect" multiple></select>
+      <textarea id="scadEditor" spellcheck="false" aria-label="SCAD source" readonly></textarea>
+
+      <div class="row" style="margin:10px 0">
+        <button id="renderBtn" class="primary">Preview</button>
+        <button id="downloadStlBtn" class="success" disabled>Download STL</button>
+      </div>
+    </section>
+
+    <section class="panel" id="viewer">
+      <div class="canvas-container">
+        <canvas id="canvas" aria-label="STL 3D Viewer"></canvas>
+
+        <div id="loading">
+          <div class="loader"></div>
+          <div class="loading-text">Rendering...</div>
+        </div>
+      </div>
+
+      <section id="console">
+        <div id="log"></div>
+      </section>
+    </section>
+  </main>
+
   <script type="module">
+    import * as THREE from "https://esm.sh/three@0.160.0";
+    import {OrbitControls} from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+    import {STLLoader} from "https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js";
     import OpenSCAD from "./openscad.wasm.js";
 
-    (async () => {
-      try {
-        const instance = await OpenSCAD({
-          noInitialRun: true,
-          locateFile: (path) => new URL(path, import.meta.url).href,
-        });
+    const $ = (sel) => document.querySelector(sel);
+    const showLoading = (on = true) => {
+      $("#loading").style.display = on ? "flex" : "none";
+    };
+    const log = (...args) => {
+      const logEl = $("#log");
+      logEl.textContent += (logEl.textContent ? "\n" : "") + args.join(" ");
+      logEl.scrollTop = logEl.scrollHeight;
+      console.debug(...args);
+    };
 
-        instance.FS.writeFile("/input.scad", "cube(10);");
-        instance.callMain(["/input.scad", "-o", "cube.stl"]);
-        const output = instance.FS.readFile("/cube.stl");
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(new Blob([output], {type: "application/octet-stream"}));
-        a.download = "cube.stl";
-        document.body.append(a);
-        a.click();
-      } catch (e) {
-        console.error("OpenSCAD init failed:", e);
+    const slim = new SlimSelect({
+      select: '#configSelect',
+      settings: {placeholderText: '옵션을 선택하세요', hideSelected: true, allowDeselect: true}
+    });
+
+    function onSelectionChange(values) {
+      // TODO: 여기서 textarea(#scadEditor) 내용을 실제로 수정해 파라미터를 반영하세요.
+      const editor = $("#scadEditor");
+      const lines = editor.value.split("\n");
+      const withoutHeader = lines.filter(l => !l.startsWith("// SELECT:"));
+      const header = `// SELECT: ${values.join(", ")}`;
+      editor.value = [header, ...withoutHeader].join("\n");
+    }
+
+    $("#configSelect").addEventListener("change", () => onSelectionChange(slim.getSelected().map(v => v.value ?? v)));
+
+    const canvas = $("#canvas");
+    const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b0f14);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 0.7));
+
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    window.addEventListener("resize", () => {
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    });
+    window.dispatchEvent(new Event("resize"));
+
+    renderer.setAnimationLoop(() => {
+      controls.update();
+      renderer.render(scene, camera);
+    });
+
+    let currentMesh = null;
+
+    function loadSTLIntoThree(stlBytes) {
+      if (currentMesh) {
+        scene.remove(currentMesh);
+        currentMesh.geometry.dispose();
+
+        if (currentMesh.material) {
+          currentMesh.material.dispose();
+        }
+
+        currentMesh = null;
       }
-    })();
+
+      const loader = new STLLoader();
+
+      const geom = loader.parse(stlBytes.buffer);
+      geom.computeBoundingBox();
+
+      const bb = geom.boundingBox;
+      const size = new THREE.Vector3().subVectors(bb.max, bb.min);
+      const center = new THREE.Vector3().addVectors(bb.min, bb.max).multiplyScalar(0.5);
+      geom.translate(-center.x, -center.y, -center.z);
+
+      const mat = new THREE.MeshStandardMaterial({metalness: .15, roughness: .6});
+      currentMesh = new THREE.Mesh(geom, mat);
+      scene.add(currentMesh);
+
+      const radius = Math.max(size.x, size.y, size.z) * 0.6 + 1e-6;
+      const dist = radius / Math.sin((camera.fov * Math.PI) / 360);
+      camera.position.set(center.x + dist, center.y + dist * 0.6, center.z + dist);
+      controls.target.set(0, 0, 0); controls.update();
+    }
+
+    let isRendering = false;
+
+    async function withRenderLock(fn) {
+      if (isRendering) {
+        return;
+      }
+
+      isRendering = true;
+
+      try {
+        await fn();
+      } finally {
+        isRendering = false;
+      }
+    }
+
+    async function renderOnceToSTL({sourceText, fnValue, outPath}) {
+      const mod = await OpenSCAD({
+        noInitialRun: true,
+        locateFile: (path) => new URL(path, import.meta.url).href,
+        print: (txt) => log(txt),
+        printErr: (txt) => log(txt),
+      });
+
+      mod.FS.writeFile("/__model.scad", `$fn=${fnValue};\n${sourceText}`);
+      mod.callMain(["/__model.scad", "-o", outPath]);
+
+      return mod.FS.readFile(outPath);
+    }
+
+    async function renderForView() {
+      showLoading(true);
+      $("#renderBtn").disabled = true;
+      $("#downloadStlBtn").disabled = true;
+
+      try {
+        loadSTLIntoThree(await renderOnceToSTL({sourceText: $("#scadEditor").value, fnValue: 20, outPath: "/__view.stl"}));
+        $("#downloadStlBtn").disabled = false;
+      } catch (e) {
+        log(e?.message || e);
+      } finally {
+        $("#renderBtn").disabled = false;
+        showLoading(false);
+      }
+    }
+
+    let lastHQUrl = null;
+
+    async function renderForDownload() {
+      showLoading(true);
+      $("#downloadStlBtn").disabled = true;
+
+      try {
+        const blob = new Blob(
+          [await renderOnceToSTL({sourceText: $("#scadEditor").value, fnValue: 200, outPath: "/__download.stl"})],
+          {type: "application/octet-stream"}
+        );
+
+        if (lastHQUrl) {
+          URL.revokeObjectURL(lastHQUrl);
+        }
+
+        lastHQUrl = URL.createObjectURL(blob);
+
+        triggerDownload(lastHQUrl, "TODO.stl");
+      } catch (e) {
+        log(e?.message || e);
+      } finally {
+        $("#downloadStlBtn").disabled = false;
+        showLoading(false);
+      }
+    }
+
+    function triggerDownload(href, filename) {
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = filename;
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      requestAnimationFrame(() => a.remove());
+    }
+
+    $("#renderBtn").addEventListener("click", () => withRenderLock(renderForView));
+    $("#downloadStlBtn").addEventListener("click", () => withRenderLock(renderForDownload));
+
+    async function loadInitialScad() {
+      try {
+        const res = await fetch("/scad/preset.scad");
+
+        if (!res.ok) {
+          throw new Error(`Failed to fetch scad: ${res.status} ${res.statusText}`);
+        }
+
+        $("#scadEditor").value = await res.text();
+      } catch (e) {
+        log(e.message || e);
+      }
+    }
+
+    window.addEventListener("load", async () => {
+      await loadInitialScad();
+    });
+
+    window.addEventListener("beforeunload", () => {
+      if (lastHQUrl) {
+        URL.revokeObjectURL(lastHQUrl);
+      }
+
+      renderer.dispose();
+    });
   </script>
-
-
 </body>
 
 </html>

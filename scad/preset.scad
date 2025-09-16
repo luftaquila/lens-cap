@@ -1,7 +1,5 @@
-$fn = 200; // resolution
-
 // -------- parameters --------
-diameters = [];
+diameters = [52, 58];
 strap_width = 11.5;
 
 strap_margin = 10;
@@ -117,4 +115,3 @@ for (i = [0 : len(diameters) - 1]) {
     }
   }
 }
-
