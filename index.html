@@ -61,19 +61,40 @@
 
     const slim = new SlimSelect({
       select: '#configSelect',
-      settings: {placeholderText: '옵션을 선택하세요', hideSelected: true, allowDeselect: true}
+      events: {
+        addable: (value) => {
+          if (isNaN(value) || value.trim() === '') {
+            return false;
+          }
+
+          return {text: value + 'mm', value: Number(value)}
+        },
+        afterChange: (values) => {
+          $("#scadEditor").value = $("#scadEditor").value.replace(
+            /(lens\s*=\s*)\[(.*?)\]/g,
+            (match, prefix) => `${prefix}[${values.map(v => v.value).join(', ')}]`
+          );
+        }
+      },
+      data: [
+        {text: '42mm', value: 42},
+        {text: '43mm', value: 43},
+        {text: '46mm', value: 46},
+        {text: '49mm', value: 49},
+        {text: '52mm', value: 52},
+        {text: '55mm', value: 55},
+        {text: '58mm', value: 58},
+        {text: '60mm', value: 60},
+        {text: '62mm', value: 62},
+        {text: '67mm', value: 67},
+        {text: '72mm', value: 72},
+        {text: '77mm', value: 77},
+        {text: '82mm', value: 82},
+        {text: '86mm', value: 86},
+        {text: '95mm', value: 95},
+        {text: '105mm', value: 105},
+      ]
     });
-
-    function onSelectionChange(values) {
-      // TODO: 여기서 textarea(#scadEditor) 내용을 실제로 수정해 파라미터를 반영하세요.
-      const editor = $("#scadEditor");
-      const lines = editor.value.split("\n");
-      const withoutHeader = lines.filter(l => !l.startsWith("// SELECT:"));
-      const header = `// SELECT: ${values.join(", ")}`;
-      editor.value = [header, ...withoutHeader].join("\n");
-    }
-
-    $("#configSelect").addEventListener("change", () => onSelectionChange(slim.getSelected().map(v => v.value ?? v)));
 
     const canvas = $("#canvas");
     const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
