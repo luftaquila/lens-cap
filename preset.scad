@@ -11,7 +11,7 @@ cone_spike_height = 1.6;
 max_cap_diameter = diameters[len(diameters) - 1];
 wall_radius = diameters[len(diameters) - 1] / 2 + 2 + cone_slope;
 
-base_holder_h = 2.5;
+base_holder_h = 2.8;
 top_grip_min_h = 4.2;
 
 fillet = 1.5;
