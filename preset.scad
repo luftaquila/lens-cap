@@ -1,6 +1,6 @@
 // -------- parameters --------
 lens = [];
-diameters = [for (d = lens) d - 2];
+diameters = [for (d = lens) d - 1];
 
 strap_width = 11.5;
 
