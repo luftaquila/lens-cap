@@ -204,7 +204,7 @@ async function renderForDownload() {
 
   try {
     const blob = new Blob(
-      [await renderOnceToSTL({ sourceText: $("#scadEditor").value, fnValue: 200, outPath: "/__download.stl" })],
+      [await renderOnceToSTL({ sourceText: $("#scadEditor").value, fnValue: 120, outPath: "/__download.stl" })],
       { type: "application/octet-stream" }
     );
 
