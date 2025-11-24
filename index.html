@@ -17,9 +17,14 @@
 
   <main>
     <section class="panel" id="controls">
-      <h3>Select Lens Cap size(s)</h3>
+      <p style="margin-top: 0;">Lens Cap Size(s)</p>
       <select id="configSelect" multiple></select>
-      <textarea id="scadEditor" spellcheck="false" aria-label="SCAD source" readonly></textarea>
+
+      <p>Strap Width (mm)</p>
+      <input type="number" id="strapWidthInput" min="1" max="50" step="0.1" />
+
+      <p>SCAD Code</p>
+      <textarea id="scadEditor" spellcheck="false" readonly></textarea>
 
       <div class="row" style="margin:10px 0">
         <button id="renderBtn" class="primary">Preview</button>

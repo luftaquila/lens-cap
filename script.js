@@ -22,6 +22,20 @@ function getLensArrayFromScad(scadCode) {
   const numbers = lensString.match(/\d+/g);
   return numbers ? numbers.map(Number) : [];
 }
+
+// Extract strap_width value from SCAD code
+function getStrapWidthFromScad(scadCode) {
+  const strapWidthMatch = scadCode.match(/strap_width\s*=\s*(\d+(?:\.\d+)?)/);
+  return strapWidthMatch ? parseFloat(strapWidthMatch[1]) : 11;
+}
+
+// Update strap_width in SCAD code
+function updateStrapWidthInScad(scadCode, strapWidth) {
+  return scadCode.replace(
+    /(strap_width\s*=\s*)\d+(?:\.\d+)?/g,
+    `$1${strapWidth}`
+  );
+}
 const log = (...args) => {
   const logEl = $("#log");
   logEl.textContent += (logEl.textContent ? "\n" : "") + args.join(" ");
@@ -247,11 +261,24 @@ async function loadInitialScad() {
       throw new Error(`Failed to fetch scad: ${res.status} ${res.statusText}`);
     }
 
-    $("#scadEditor").value = await res.text();
+    const scadText = await res.text();
+    $("#scadEditor").value = scadText;
+    
+    // Initialize strap_width input with current value
+    const strapWidth = getStrapWidthFromScad(scadText);
+    $("#strapWidthInput").value = strapWidth;
   } catch (e) {
     log(e.message || e);
   }
 }
+
+// Handle strap_width input changes
+$("#strapWidthInput").addEventListener("input", (e) => {
+  const strapWidth = parseFloat(e.target.value);
+  if (!isNaN(strapWidth) && strapWidth > 0) {
+    $("#scadEditor").value = updateStrapWidthInScad($("#scadEditor").value, strapWidth);
+  }
+});
 
 window.addEventListener("load", async () => {
   await loadInitialScad();
