@@ -33,7 +33,24 @@ header {
 h1 {
   margin: 0;
   font-size: 18px;
-  font-weight: 600
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.github-link:hover {
+  color: var(--fg);
 }
 
 main {
