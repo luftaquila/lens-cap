@@ -42,7 +42,7 @@ const slim = new SlimSelect({
     afterChange: (values) => {
       $("#scadEditor").value = $("#scadEditor").value.replace(
         /(lens\s*=\s*)\[(.*?)\]/g,
-        (match, prefix) => `${prefix}[${values.map(v => v.value).join(', ')}]`
+        (match, prefix) => `${prefix}[${values.sort((a, b) => a.value - b.value).map(v => v.value).join(', ')}]`
       );
     }
   },
