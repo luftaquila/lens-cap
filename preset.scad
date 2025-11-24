@@ -2,7 +2,7 @@
 lens = [];
 diameters = [for (d = lens) d - 1];
 
-strap_width = 11.5;
+strap_width = 11;
 
 strap_margin = 10;
 cone_slope = 2;
