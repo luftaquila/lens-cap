@@ -188,7 +188,8 @@ button:disabled {
   flex: 0 0 auto;
 }
 
-#strapWidthInput {
+#strapWidthInput,
+#emailInput {
   width: 100%;
   padding: 8px;
   border-radius: 10px;

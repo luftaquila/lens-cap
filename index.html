@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://unpkg.com/slim-select@2.9.0/dist/slimselect.css" rel="stylesheet" />
   <script src="https://unpkg.com/slim-select@2.9.0/dist/slimselect.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -28,14 +29,14 @@
       <select id="configSelect" multiple></select>
 
       <p>Strap Width (mm)</p>
-      <input type="number" id="strapWidthInput" min="1" max="50" step="0.1" />
+      <input type="number" id="strapWidthInput" min="1" max="50" step="0.1" value="11" />
 
-      <p>SCAD Code</p>
-      <textarea id="scadEditor" spellcheck="false" readonly></textarea>
+      <p>Email (for STL download)</p>
+      <input type="email" id="emailInput" placeholder="your@email.com" />
 
       <div class="row" style="margin:10px 0">
-        <button id="renderBtn" class="primary">Preview</button>
-        <button id="downloadStlBtn" class="success" disabled>Download STL</button>
+        <button id="renderBtn" class="primary">Preview (Free)</button>
+        <button id="downloadStlBtn" class="success" disabled>Download STL ($1.50)</button>
       </div>
     </section>
 

@@ -1,8 +1,8 @@
 // -------- parameters --------
-lens = [];
+lens = LENS_ARRAY;
 diameters = [for (d = lens) d - 1];
 
-strap_width = 11;
+strap_width = STRAP_WIDTH;
 
 strap_margin = 10;
 cone_slope = 2;
@@ -117,3 +117,4 @@ for (i = [0 : len(diameters) - 1]) {
     }
   }
 }
+
